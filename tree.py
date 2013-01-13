@@ -53,10 +53,12 @@ class Tree(object):
         if not isinstance(other, Tree):
             return False
 
-        equal = self.value == other.value
+        equal = self.value == other.value and len(self) == len(other)
 
         for my_child, other_child in itertools.izip(self, other):
+            
             equal = my_child == other_child
+
             if not equal:
                 break
 
@@ -75,7 +77,7 @@ class Tree(object):
         @children:  new value for the children.
         '''
 
-        super(Node, self).__init__()
+        super(Tree, self).__init__()
         self.__value = value
         self.__children = []
 
@@ -84,12 +86,13 @@ class Tree(object):
                     or isinstance(children, Tree):
 
             self.__process_children_in_list(children)
+
         elif isinstance(children, types.OrderedDict):
             self.__process_children_in_ordered_dict(children)
 
     @property
     def value(self):
-        return __value
+        return self.__value
 
     @value.setter
     def value(self, val):
@@ -134,7 +137,12 @@ class Tree(object):
             assert isinstance(item, Tree)
             return self.__children.append(item)
         except AssertionError:
-            if isinstance(item,  
+            #XXX:
+            #Check to see if item is a list or tuples:
+            #Otherwise ... create a Tree 
+            pass
+
+            
             
         return self.__children.append(item)
 
@@ -148,17 +156,18 @@ class Tree(object):
         '''
         try:
             for childpair in children:
-                if isinstance(childpair, types.ListType) or isinstance(child, types.TupleType):
+                if isinstance(childpair, types.ListType) or isinstance(childpair, types.TupleType):
+                    import pdb; pdb.set_trace()
                     if len(childpair) == 2:
                         child, grandchildren = childpair
                         treenode = Tree(value=child, children=grandchildren)
                         self.__children.append(treenode)
-                    if len(childpair) = 1:
+                    elif len(childpair) == 1:
                         child = childpair
                         treenode = Tree(value=child)
                         self.__children.append(treenode)
 
-                elif isinstance(childpair, OrderedDictionary):
+                elif isinstance(childpair, OrderedDict):
                     self.__process_children_in_ordered_dict(childpair)
 
         except AttributeError, AssertionError:
