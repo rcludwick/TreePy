@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from collections import OrderedDict
 import types
 import itertools
+import collections
 
 class Error(Exception):
     pass
@@ -12,6 +12,35 @@ class Tree(object):
     The Tree class builds a tree from an ordered dict or a series of tuples.
     Each subnode is of type Tree
     '''
+    #-------------------------------------
+    # Tree Boolean Tests
+    #-------------------------------------
+
+    @staticmethod
+    def is_iterable(thing):
+        iterable = isinstance(thing, collections.Iterable)
+        string = isinstance(thing, types.StringTypes)
+        return iterable and not string
+
+    #-------------------------------------
+    # Tree Factory Methods
+    #-------------------------------------
+
+    @staticmethod
+    def from_nested_doublets(doublets):
+        pass
+
+    @staticmethod
+    def from_nested_singlets(ordered_list):
+        '''
+        Process children in a list of lists or tuple of tuples 
+        or a combination thereof.
+        '''
+        pass
+
+    @staticmethod
+    def from_ordered_dict(ordered_dict):
+        pass
 
     #-------------------------------------
     # Loop check
@@ -53,14 +82,20 @@ class Tree(object):
         if not isinstance(other, Tree):
             return False
 
-        equal = self.value == other.value and len(self) == len(other)
+        equal_values = self.value == other.value 
+        equal_lengths = len(self) == len(other)
 
-        for my_child, other_child in itertools.izip(self, other):
-            
-            equal = my_child == other_child
+        equal_nodes = equal_values and equal_lengths
 
-            if not equal:
-                break
+        equal = equal_nodes
+        if equal_nodes:
+
+            for my_child, other_child in itertools.izip(self, other):
+                
+                equal = my_child == other_child
+
+                if not equal:
+                    break
 
         return equal
 
@@ -69,26 +104,40 @@ class Tree(object):
     # Init and properties
     #-------------------------------------
 
-    def __init__(self, value, children=None):
+    def __init__(self, value=None, children=None):
         '''
         Init method.
 
         @value:  value for the node to hold.
         @children:  new value for the children.
+
+        The children should accept nested lists or tuples in the style:
+
+        [ 'a', 'b', ['c', 'd'] , ['e'], ['f', 'g', ['h', ['i', ['j']]]]]
+
         '''
 
         super(Tree, self).__init__()
         self.__value = value
         self.__children = []
 
-        if isinstance(children, types.ListType) \
-                    or isinstance(children, types.TupleType) \
-                    or isinstance(children, Tree):
+        is_iterable = Tree.is_iterable(children)
+        if is_iterable:
 
-            self.__process_children_in_list(children)
+            for child in children:
+                
+                is_tree_node = isinstance(child, Tree)
+                is_parent = Tree.is_iterable(child)
+                if is_tree_node:
+                    self.__children.append(child)
 
-        elif isinstance(children, types.OrderedDict):
-            self.__process_children_in_ordered_dict(children)
+                elif is_parent:
+                    parent = Tree(value=None, children=child)
+                    self.__children.append(parent)
+
+                else:
+                    leaf = Tree(value = child)
+                    self.__children.append(leaf)
 
     @property
     def value(self):
@@ -97,6 +146,11 @@ class Tree(object):
     @value.setter
     def value(self, val):
         self.__value = val
+
+    @property
+    def children(self):
+        return self.__children
+
 
     #-------------------------------------
     #List Operations
@@ -127,7 +181,7 @@ class Tree(object):
             raise IndexError('List assignment index out of range.')
     
     def __getslice__(self, i, j):
-        return Tree(value=self.__value, children=self._d.__getslice__(i,j))
+        return Tree(value=self.__value, children=self.__children.__getslice__(i,j))
         
     def next(self):
         return self.__children.next()
@@ -142,47 +196,26 @@ class Tree(object):
             #Otherwise ... create a Tree 
             pass
 
-            
-            
         return self.__children.append(item)
+
+    #-------------------------------------
+    #Special tree specific idioms
+    #-------------------------------------
+    
+    def flatten_iter(self):
+        pass
+
+    def flatten(self):
+        pass
+
+    def leaf_iter(self):
+        pass
+
+    def flatten_leafs(self):
+        pass
 
     #-------------------------------------
     #Special processing for incoming trees
     #-------------------------------------
 
-    def __process_children_in_list(self, children):
-        '''
-        Process children in a list of lists or tuple of tuples or a combination thereof.
-        '''
-        try:
-            for childpair in children:
-                if isinstance(childpair, types.ListType) or isinstance(childpair, types.TupleType):
-                    import pdb; pdb.set_trace()
-                    if len(childpair) == 2:
-                        child, grandchildren = childpair
-                        treenode = Tree(value=child, children=grandchildren)
-                        self.__children.append(treenode)
-                    elif len(childpair) == 1:
-                        child = childpair
-                        treenode = Tree(value=child)
-                        self.__children.append(treenode)
-
-                elif isinstance(childpair, OrderedDict):
-                    self.__process_children_in_ordered_dict(childpair)
-
-        except AttributeError, AssertionError:
-            raise Error('Type is not iterable')
-
-    def __process_children_in_ordered_dict(self, children):
-        '''
-        Process children as an ordered dict.
-        '''
-        try:
-            assert(isinstance(children, OrderedDict))
-            for child, grandchildren in child.iteritems():
-                treenode = Tree(value=child, children=grandchildren)
-                self.__children.append(treenode)
-
-        except AssertionError:
-            raise Error("Not an ordered dictionary")
 
