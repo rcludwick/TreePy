@@ -74,8 +74,8 @@ class TreeTest(unittest.TestCase):
         result = [ y.value for y in root.children ]
         self.assertListEqual(children, result)
 
-        input1 = list(root[3:6])
-        output1 = root2[3:6]
+        input1 = list(root[1:6])
+        output1 = root2[1:6]
         self.assertListEqual(input1, output1)
 
         input1 = list(root[4:7])
@@ -86,6 +86,17 @@ class TreeTest(unittest.TestCase):
         output1 = root2[4:7]
         self.assertNotEqual(input1, output1)
         
+        input1 = list(root[1:5])
+        output1 = root2[4:8]
+        self.assertNotEqual(input1, output1)
+
+        input1 = list(root[::-1])
+        output1 = root2[::-1]
+        self.assertListEqual(input1, output1)
+
+        input1 = list(reversed(root))
+        output1 = list(reversed(root2))
+        self.assertListEqual(input1, output1)
 
 if __name__ == "__main__":
 
