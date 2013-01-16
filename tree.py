@@ -128,6 +128,7 @@ class Tree(object):
                 
                 is_tree_node = isinstance(child, Tree)
                 is_parent = Tree.is_iterable(child)
+
                 if is_tree_node:
                     self.__children.append(child)
 
