@@ -27,12 +27,11 @@ class Tree(object):
     #-------------------------------------
 
     @staticmethod
-    def from_nested_singlets(ordered_list):
+    def from_nested_singlets(nested_list):
         '''
-        Process children in a list of lists or tuple of tuples 
-        or a combination thereof.
+        Process children in a nested list or a combination thereof.
         '''
-        pass
+        return Tree(children=nested_list)
 
     #-------------------------------------
     # Loop check
@@ -83,7 +82,7 @@ class Tree(object):
         equal_nodes = equal_values and equal_lengths
 
         equal = equal_nodes
-        if equal_nodes:
+        if equal:
 
             for my_child, other_child in itertools.izip(self, other):
 
@@ -115,9 +114,6 @@ class Tree(object):
         super(Tree, self).__init__()
         self.__value = value
         self.__children = []
-
-        if isinstance(children, types.StringTypes):
-            raise Error("String passed into children parameter")
 
         is_iterable = Tree.is_iterable(children)
         if is_iterable:
