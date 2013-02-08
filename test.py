@@ -24,7 +24,6 @@ class ListTreeTest(unittest.TestCase):
         t1.value = 15
         t2.value = 15
         self.assertTrue(t1==t2)
-    
         t1 = ListTree(value="Root Node", children=ListTreeTest.tree_layout)
         t2 = ListTree(value="Root Node", children=ListTreeTest.tree_layout_2)
         self.assertFalse(t1==t2)
@@ -85,7 +84,7 @@ class ListTreeTest(unittest.TestCase):
         input1 = list(root[1:7])
         output1 = root2[4:7]
         self.assertNotEqual(input1, output1)
-        
+
         input1 = list(root[1:5])
         output1 = root2[4:8]
         self.assertNotEqual(input1, output1)
@@ -100,6 +99,8 @@ class ListTreeTest(unittest.TestCase):
 
     def testLoop(self):
 
+        #No Loops
+
         input1 = ListTree(children=ListTreeTest.tree_layout)
         input2 = ListTree(children=ListTreeTest.tree_layout_2)
         input3 = ListTree(children=ListTreeTest.tree_layout_3)
@@ -108,8 +109,32 @@ class ListTreeTest(unittest.TestCase):
         self.assertFalse(input2.has_loop())
         self.assertFalse(input3.has_loop())
 
+        input1.append(input2)
+
+        self.assertFalse(input1.has_loop())
+
+        #Loops
+
+        input2.append(input1)
+        input1.append(input2)
+
+        self.assertTrue(input1.has_loop())
+
+        input4 = ListTree(children=ListTreeTest.tree_layout)
+        input5 = ListTree(children=ListTreeTest.tree_layout_2)
+        input6 = ListTree(children=ListTreeTest.tree_layout_3)
+
+        input6.append(input4)
+        input4.append(input5)
+        input5.append(input6)
+
+        self.assertTrue(input4.has_loop())
+        self.assertTrue(input5.has_loop())
+        self.assertTrue(input6.has_loop())
+
+
 if __name__ == "__main__":
 
     unittest.main()
-    
+
 
