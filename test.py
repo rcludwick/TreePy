@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import unittest
-from tree import Tree
+from listtree import ListTree
 import functools
 
-class TreeTest(unittest.TestCase):
+class ListTreeTest(unittest.TestCase):
 
     tree_layout = ['a','b','c',['a','b','c']]
     tree_layout_2 = ['a','b','c',['a','b','c',['a','b','c']]]
@@ -12,8 +12,8 @@ class TreeTest(unittest.TestCase):
 
     def testEquals(self):
 
-        t1 = Tree(value="Root Node", children=TreeTest.tree_layout)
-        t2 = Tree(value="Root Node", children=TreeTest.tree_layout)
+        t1 = ListTree(value="Root Node", children=ListTreeTest.tree_layout)
+        t2 = ListTree(value="Root Node", children=ListTreeTest.tree_layout)
 
         self.assertTrue(t1==t2)
 
@@ -25,19 +25,19 @@ class TreeTest(unittest.TestCase):
         t2.value = 15
         self.assertTrue(t1==t2)
     
-        t1 = Tree(value="Root Node", children=TreeTest.tree_layout)
-        t2 = Tree(value="Root Node", children=TreeTest.tree_layout_2)
+        t1 = ListTree(value="Root Node", children=ListTreeTest.tree_layout)
+        t2 = ListTree(value="Root Node", children=ListTreeTest.tree_layout_2)
         self.assertFalse(t1==t2)
 
-        t3_1 = Tree(value=None, children=TreeTest.tree_layout_3)
-        t3_2 = Tree(value=None, children=TreeTest.tree_layout_3)
+        t3_1 = ListTree(value=None, children=ListTreeTest.tree_layout_3)
+        t3_2 = ListTree(value=None, children=ListTreeTest.tree_layout_3)
         self.assertTrue(t3_1==t3_2)
 
     def testLength(self):
 
-        t1 = Tree(value=None, children=TreeTest.tree_layout)
-        t2 = Tree(value=None, children=TreeTest.tree_layout_2)
-        t3 = Tree(value=None, children=TreeTest.tree_layout_3)
+        t1 = ListTree(value=None, children=ListTreeTest.tree_layout)
+        t2 = ListTree(value=None, children=ListTreeTest.tree_layout_2)
+        t3 = ListTree(value=None, children=ListTreeTest.tree_layout_3)
 
         self.assertTrue(len(t1) == 4)
         self.assertTrue(len(t2) == 4)
@@ -45,7 +45,7 @@ class TreeTest(unittest.TestCase):
 
     def testProperty(self):
 
-        x = Tree(value=None)
+        x = ListTree(value=None)
         self.assertTrue(x.value == None)
 
         x.value = 5
@@ -55,7 +55,7 @@ class TreeTest(unittest.TestCase):
 
         children = [4,5,6,'a','b','c']
 
-        root = Tree(value=None, children=children)
+        root = ListTree(value=None, children=children)
         result = [ y.value for y in root ]
 
         self.assertListEqual(children, result)
@@ -68,8 +68,8 @@ class TreeTest(unittest.TestCase):
 
         children = list(range(10))
 
-        root = Tree(children=children)
-        root2 = [ Tree(value = x) for x in children ]
+        root = ListTree(children=children)
+        root2 = [ ListTree(value = x) for x in children ]
 
         result = [ y.value for y in root.children ]
         self.assertListEqual(children, result)
@@ -97,6 +97,16 @@ class TreeTest(unittest.TestCase):
         input1 = list(reversed(root))
         output1 = list(reversed(root2))
         self.assertListEqual(input1, output1)
+
+    def testLoop(self):
+
+        input1 = ListTree(children=ListTreeTest.tree_layout)
+        input2 = ListTree(children=ListTreeTest.tree_layout_2)
+        input3 = ListTree(children=ListTreeTest.tree_layout_3)
+
+        self.assertFalse(input1.has_loop())
+        self.assertFalse(input2.has_loop())
+        self.assertFalse(input3.has_loop())
 
 if __name__ == "__main__":
 

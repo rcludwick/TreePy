@@ -7,10 +7,10 @@ import collections
 class Error(Exception):
     pass
 
-class Tree(object):
+class ListTree(object):
     '''
-    The Tree class builds a tree from an ordered dict or a series of tuples.
-    Each subnode is of type Tree
+    The ListTree class builds a tree from a series of tuples or iteraable.
+    Each subnode is of type Tree.
     '''
     #-------------------------------------
     # Tree Boolean Tests
@@ -27,19 +27,11 @@ class Tree(object):
     #-------------------------------------
 
     @staticmethod
-    def from_nested_doublets(doublets):
-        pass
-
-    @staticmethod
     def from_nested_singlets(ordered_list):
         '''
         Process children in a list of lists or tuple of tuples 
         or a combination thereof.
         '''
-        pass
-
-    @staticmethod
-    def from_ordered_dict(ordered_dict):
         pass
 
     #-------------------------------------
@@ -79,7 +71,7 @@ class Tree(object):
         '''
         Performs a deep compare.
         '''
-        if not isinstance(other, Tree):
+        if not isinstance(other, ListTree):
             return False
 
         equal_values = self.value == other.value 
@@ -117,27 +109,27 @@ class Tree(object):
 
         '''
 
-        super(Tree, self).__init__()
+        super(ListTree, self).__init__()
         self.__value = value
         self.__children = []
 
-        is_iterable = Tree.is_iterable(children)
+        is_iterable = ListTree.is_iterable(children)
         if is_iterable:
 
             for child in children:
                 
-                is_tree_node = isinstance(child, Tree)
-                is_parent = Tree.is_iterable(child)
+                is_tree_node = isinstance(child, ListTree)
+                is_parent = ListTree.is_iterable(child)
 
                 if is_tree_node:
                     self.__children.append(child)
 
                 elif is_parent:
-                    parent = Tree(value=None, children=child)
+                    parent = ListTree(value=None, children=child)
                     self.__children.append(parent)
 
                 else:
-                    leaf = Tree(value = child)
+                    leaf = ListTree(value = child)
                     self.__children.append(leaf)
 
     @property
@@ -182,19 +174,19 @@ class Tree(object):
             raise IndexError('List assignment index out of range.')
     
     def __getslice__(self, i, j):
-        return Tree(value=self.__value, children=self.__children.__getslice__(i,j))
+        return ListTree(value=self.__value, children=self.__children.__getslice__(i,j))
         
     def next(self):
         return self.__children.next()
     
     def append(self, item):
         try:
-            assert isinstance(item, Tree)
+            assert isinstance(item, ListTree)
             return self.__children.append(item)
         except AssertionError:
             #XXX:
             #Check to see if item is a list or tuples:
-            #Otherwise ... create a Tree 
+            #Otherwise ... create a ListTree 
             pass
 
         return self.__children.append(item)
