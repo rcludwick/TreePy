@@ -74,10 +74,10 @@ class Tree(object):
         if not isinstance(other, Tree):
             return False
 
-        if self.has_loop() || other.has_loop():
+        if self.has_loop() or other.has_loop():
             raise Error("Cannot compare trees.  Loop detected.")
 
-        equal_values = self.value == other.value 
+        equal_values = self.value == other.value
         equal_lengths = len(self) == len(other)
 
         equal_nodes = equal_values and equal_lengths
