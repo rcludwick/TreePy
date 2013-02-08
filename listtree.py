@@ -49,7 +49,7 @@ class ListTree(object):
         Implements a loop check function
         '''
         visited = visited if visited is not None else []
-        
+
         for child in self.__children:
             if child in visited:
                 return True
@@ -83,7 +83,7 @@ class ListTree(object):
         if equal_nodes:
 
             for my_child, other_child in itertools.izip(self, other):
-                
+
                 equal = my_child == other_child
 
                 if not equal:
@@ -113,11 +113,14 @@ class ListTree(object):
         self.__value = value
         self.__children = []
 
+        if isinstance(children, types.StringTypes):
+            raise Error("String passed into children parameter")
+
         is_iterable = ListTree.is_iterable(children)
         if is_iterable:
 
             for child in children:
-                
+
                 is_tree_node = isinstance(child, ListTree)
                 is_parent = ListTree.is_iterable(child)
 
@@ -154,13 +157,13 @@ class ListTree(object):
 
     def __iter__(self):
         return iter(self.__children)
-    
+
     def __reversed__(self):
         return self.__children.__reversed__()
-    
+
     def __contains__(self, item):
         return item in self.__children
-    
+
     def __getitem__(self, index):
         try:
             return self.__children[index]
@@ -172,20 +175,20 @@ class ListTree(object):
             return self.__children.__setitem__(key,value)
         except IndexError:
             raise IndexError('List assignment index out of range.')
-    
+
     def __getslice__(self, i, j):
         return ListTree(value=self.__value, children=self.__children.__getslice__(i,j))
-        
+
     def next(self):
         return self.__children.next()
-    
+
     def append(self, item):
         try:
             assert isinstance(item, ListTree)
             return self.__children.append(item)
         except AssertionError:
             #XXX:
-            #Check to see if item is a list or tuples:
+            #Check to see if item is a list or tuple:
             #Otherwise ... create a ListTree 
             pass
 
@@ -194,7 +197,7 @@ class ListTree(object):
     #-------------------------------------
     #Special tree specific idioms
     #-------------------------------------
-    
+
     def flatten_iter(self):
         pass
 
