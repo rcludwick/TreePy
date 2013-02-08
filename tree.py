@@ -27,11 +27,33 @@ class Tree(object):
     #-------------------------------------
 
     @staticmethod
-    def from_nested_singlets(nested_list):
+    def from_nested_lists(nested_list):
         '''
         Process children in a nested list or a combination thereof.
         '''
         return Tree(children=nested_list)
+
+    @staticmethod
+    def from_nested_dicts(nested_dict, add_root_node=True):
+        '''
+        Process children in an nested set of dictionaries
+
+        @add_root_node should be true if there is more than
+            one top level key in the dictionary, otherwise
+            it can be false.
+
+        '''
+        pass
+
+    @staticmethod
+    def from_nested_doublets(nested_doublets):
+        '''
+        Process children as a nested list of doublets in
+        (key, value) form
+
+        ( ("a", "b"), ("c", ("d", "e")) )
+        '''
+        pass
 
     #-------------------------------------
     # Loop check
