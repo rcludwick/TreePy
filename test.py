@@ -10,6 +10,27 @@ class TreeTest(unittest.TestCase):
     tree_layout_2 = ['a','b','c',['a','b','c',['a','b','c']]]
     tree_layout_3 = ['a','b','c', 1, 2, 3, ['a','b','c',['a','b','c']]]
 
+    def testFlatIter(self):
+
+        #Use value with defaulted paramaters
+        t = Tree(value="Start", children=TreeTest.tree_layout)
+        output = [ y for y in t.flat_value_iter() ]
+        expected_result = [ "Start", 'a', 'b', 'c', 'a', 'b', 'c' ]
+        self.assertEquals(output, expected_result)
+
+        #Don't use value parameter
+        t = Tree(children=TreeTest.tree_layout)
+        output = [ y for y in t.flat_value_iter() ]
+        expected_result = [ 'a', 'b', 'c', 'a', 'b', 'c' ]
+        self.assertEquals(output, expected_result)
+
+        #Don't use value, skip_none=False
+        t = Tree(children=TreeTest.tree_layout)
+        output = [ y for y in t.flat_value_iter(skip_none=False) ]
+        expected_result = [ None, 'a', 'b', 'c', None, 'a', 'b', 'c' ]
+        self.assertEquals(output, expected_result)
+
+
     def testEquals(self):
 
         t1 = Tree(value="Root Node", children=TreeTest.tree_layout)

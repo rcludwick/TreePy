@@ -34,7 +34,7 @@ class Tree(object):
         return Tree(children=nested_list)
 
     @staticmethod
-    def from_nested_dicts(nested_dict, add_root_node=True):
+    def from_nested_dicts(nested_dict, add_root_node=True, root_value=None):
         '''
         Process children in an nested set of dictionaries
 
@@ -216,20 +216,46 @@ class Tree(object):
     #Special tree specific idioms
     #-------------------------------------
 
-    def flatten_iter(self):
-        pass
+    def flat_value_iter(self, skip_none=True):
+        '''
+        A generator that yields the tree's values
 
-    def flatten(self):
-        pass
+        @skip_none will skip anything equal to None
+        '''
+        if not skip_none or self.__value is not None:
+                yield self.__value
 
-    def leaf_iter(self):
-        pass
+        for child in self.__children:
+            for child_iter in child.flat_value_iter(skip_none=skip_none):
+                if not skip_none or child_iter is not None:
+                    yield child_iter
 
-    def flatten_leafs(self):
-        pass
+        raise StopIteration()
 
-    #-------------------------------------
-    #Special processing for incoming trees
-    #-------------------------------------
+    def flat_node_iter(self):
+        '''
+        Yields the nodes of the tree themselves in a flat way.
+
+        Use leaf.value to get the value of the node.
+        '''
+        yield self
+
+        for child in self.__children:
+            for child_iter in child.flat_node_iter():
+                yield child_iter
+
+        raise StopIteration()
+
+
+    def leaf_node_iter(self):
+        '''
+        A generator that iterates over the leaves.
+
+        use leaf.value to access the value of the nodes of the tree
+        '''
+        for child in self._children:
+            yield child
+        raise StopIteration()
+
 
 
