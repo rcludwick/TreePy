@@ -31,7 +31,7 @@ class TreeTest(unittest.TestCase):
         expected_result = [ None, 'a', 'b', 'c', None, 'a', 'b', 'c' ]
         self.assertEquals(output, expected_result)
 
-        #Don't use value, skip_none=False
+        #Don't use value, skip_none=False, deepest_first=True
         t = Tree(children=TreeTest.tree_layout)
         output = [ y for y in t.flat_value_iter(skip_none=False, deepest_first=True) ]
         expected_result = [ 'a', 'b', 'c', 'a', 'b', 'c', None, None ]
@@ -49,6 +49,17 @@ class TreeTest(unittest.TestCase):
         expected_result = [ 'a', 'b', 'c', None, 'd', None, 'e', "Start"]
         self.assertEquals(output, expected_result)
 
+        #Use flat_node_iter:
+        t = Tree(children=TreeTest.tree_layout)
+        output = [ y.value for y in t.flat_node_iter() ]
+        expected_result = [ None, 'a', 'b', 'c', None, 'a', 'b', 'c' ]
+        self.assertEquals(output, expected_result)
+
+        #Use flat_node_iter and deepest_first=True:
+        t = Tree(value = "Start", children=TreeTest.tree_layout)
+        output = [ y.value for y in t.flat_node_iter(deepest_first=True) ]
+        expected_result = [ 'a', 'b', 'c', 'a', 'b', 'c', None, "Start"]
+        self.assertEquals(output, expected_result)
 
     def testEquals(self):
 
