@@ -56,6 +56,14 @@ class Tree(object):
         pass
 
     #-------------------------------------
+    # ComparisonMethods
+    #-------------------------------------
+
+    @staticmethod
+    def diff_trees(new, old):
+        pass
+
+    #-------------------------------------
     # Loop check
     #-------------------------------------
     def has_loop(self):
@@ -210,39 +218,52 @@ class Tree(object):
             #Otherwise ... create a Tree 
             pass
 
-        return self.__children.append(item)
 
     #-------------------------------------
     #Special tree specific idioms
     #-------------------------------------
 
-    def flat_value_iter(self, skip_none=True):
+    def flat_value_iter(self, skip_none=True, deepest_first=False):
         '''
         A generator that yields the tree's values
 
         @skip_none will skip anything equal to None
+        @deepest_first will yield deepest first
         '''
-        if not skip_none or self.__value is not None:
-                yield self.__value
+        if not deepest_first:
+            if not skip_none or self.__value is not None:
+                    yield self.__value
 
         for child in self.__children:
-            for child_iter in child.flat_value_iter(skip_none=skip_none):
+            for child_iter in child.flat_value_iter(skip_none=skip_none, 
+                                           deepest_first=deepest_first):
+
                 if not skip_none or child_iter is not None:
                     yield child_iter
 
+        if deepest_first:
+            if not skip_none or self.__value is not None:
+                    yield self.__value
+
         raise StopIteration()
 
-    def flat_node_iter(self):
+
+    def flat_node_iter(self, deepest_first=False):
         '''
         Yields the nodes of the tree themselves in a flat way.
 
         Use leaf.value to get the value of the node.
         '''
-        yield self
+
+        if not deepest_first:
+            yield self
 
         for child in self.__children:
             for child_iter in child.flat_node_iter():
                 yield child_iter
+
+        if deepest_first:
+            yield self
 
         raise StopIteration()
 
