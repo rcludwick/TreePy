@@ -218,7 +218,6 @@ class Tree(object):
             #Otherwise ... create a Tree 
             pass
 
-
     #-------------------------------------
     #Special tree specific idioms
     #-------------------------------------
@@ -259,7 +258,9 @@ class Tree(object):
             yield self
 
         for child in self.__children:
-            for child_iter in child.flat_node_iter():
+            for child_iter in child.flat_node_iter(
+                        deepest_first=deepest_first):
+
                 yield child_iter
 
         if deepest_first:
@@ -277,6 +278,4 @@ class Tree(object):
         for child in self._children:
             yield child
         raise StopIteration()
-
-
 
