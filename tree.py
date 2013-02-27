@@ -209,9 +209,6 @@ class Tree(object):
     def __getslice__(self, i, j):
         return Tree(value=self.__value, children=self.__children.__getslice__(i,j))
 
-    def next(self):
-        return self.__children.next()
-
     def append(self, item):
         try:
             assert isinstance(item, Tree)

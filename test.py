@@ -183,6 +183,20 @@ class TreeTest(unittest.TestCase):
         self.assertTrue(input5.has_loop())
         self.assertTrue(input6.has_loop())
 
+    def testIter(self):
+
+        t = Tree(value="Start", children=TreeTest.tree_layout)
+
+        i = iter(t)
+        result = []
+        try:
+            while True:
+                y = i.next()
+                result.append(y.value)
+        except StopIteration:
+            pass
+
+        self.assertEquals(result, ['a','b','c', None])
 
 if __name__ == "__main__":
 
