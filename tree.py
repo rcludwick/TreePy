@@ -136,6 +136,10 @@ class Tree(object):
 
         [ 'a', 'b', ['c', 'd'] , ['e'], ['f', 'g', ['h', ['i', ['j']]]]]
 
+        The nodes that non list types will have value but no children.
+
+        The nodes that are list types will have children but with value set to None.
+
         '''
 
         super(Tree, self).__init__()
