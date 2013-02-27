@@ -41,3 +41,15 @@ Otherwise the iterator and returns a tree object rather than the value.
     except StopIteration:
         pass
 
+To check to see if there's a loop use the has_loop() function which will
+test the tree for the presence of a loop structure.
+
+.. code-block:: python
+
+    t = Tree(children=[1,2,3])
+    t.append(t)
+
+    if t.has_loop():
+        rasie Exception('Loop detected in Tree')
+
+
